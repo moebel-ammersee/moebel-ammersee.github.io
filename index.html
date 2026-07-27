@@ -178,11 +178,18 @@ function mailLink(n){return `mailto:${CONTACT.email}?subject=`+encodeURIComponen
 const PH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>';
 function badge(s){return s==="sold"?'<span class="badge sold">Verkauft</span>':s==="reserved"?'<span class="badge reserved">Reserviert</span>':'';}
 
-function gallery(it){
+function gallery(it,idx){
   const imgs=it.imgs||[];
   const remote = imgs.length && imgs[0].startsWith("http");
   if(!imgs.length){return `<div class="ph">${badge(it.status)}<div class="ph-empty">${PH}<span>Foto folgt</span></div></div>`;}
-  const slides=imgs.map((s,i)=>`<img src="${s}" alt="${it.name}" loading="lazy" onerror="galFail(this)" class="${i===0?'on':''}">`).join('');
+  // Das Titelbild der obersten Karten wird sofort geladen (das sieht man ja
+  // direkt), alles andere lazy. Sonst haengt der erste Eindruck am Lazy-Loader.
+  const slides=imgs.map((s,i)=>{
+    const eager = i===0 && idx<4;
+    return `<img src="${s}" alt="${it.name}" decoding="async"`
+      + ` loading="${eager?'eager':'lazy'}"${idx===0&&i===0?' fetchpriority="high"':''}`
+      + ` onerror="galFail(this)" class="${i===0?'on':''}">`;
+  }).join('');
   const multi=imgs.length>1;
   const nav=multi?`<button class="nav prev" aria-label="zurück">‹</button><button class="nav next" aria-label="weiter">›</button>
      <div class="count-badge">📷 ${imgs.length}</div>
@@ -204,10 +211,10 @@ function galFail(img){
   const cb=ph.querySelector('.count-badge'); if(cb) cb.textContent='📷 '+left.length;
   if(left.length<2) ph.querySelectorAll('.nav,.dots,.count-badge').forEach(x=>x.remove());
 }
-function card(it){
+function card(it,idx){
   const sold=it.status==="sold";
   return `<article class="card ${it.feature?'feature':''}">
-    ${gallery(it)}
+    ${gallery(it,idx)}
     <div class="body">
       ${it.brand?`<div class="brand">${it.brand}</div>`:''}
       <div class="name">${it.name}</div>
@@ -224,7 +231,7 @@ function card(it){
 
 function render(list){
   const grid=document.getElementById('grid');
-  grid.innerHTML=list.map(card).join('');
+  grid.innerHTML=list.map((it,i)=>card(it,i)).join('');
   document.getElementById('count').textContent=`${list.filter(i=>i.status!=='sold').length} verfügbar`;
   guardRemote();
 }
