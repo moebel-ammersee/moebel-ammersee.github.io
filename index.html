@@ -52,13 +52,15 @@
   .offer-note{margin-top:18px;max-width:60ch;font-size:14.5px;color:var(--ink);
     background:var(--tag);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
   .share-note{margin-top:14px;max-width:60ch;font-size:14.5px;color:var(--ink)}
-  .btn-share{background:transparent;border-color:var(--accent);color:var(--accent);font-family:inherit}
-  .btn-share:hover{background:var(--accent);color:#fff}
-  .btn-share.done{background:#0f5c2e;border-color:#0f5c2e;color:#fff}
   .cta-row{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px}
   .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:.15s}
   .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{filter:brightness(1.06)}
   .btn-ghost{background:transparent;border-color:var(--ink);color:var(--ink)}.btn-ghost:hover{background:var(--ink);color:#fff}
+  /* MUSS nach .btn stehen - .btn setzt border:1px solid transparent und wuerde
+     eine vorher notierte border-color wieder wegnehmen. */
+  .btn-share{background:transparent;border-color:var(--accent);color:var(--accent);font-family:inherit}
+  .btn-share:hover{background:var(--accent);color:#fff}
+  .btn-share.done{background:#0f5c2e;border-color:#0f5c2e;color:#fff}
   .urgency{margin-top:22px;padding:13px 18px;border-radius:12px;background:#7a1f1f;color:#fff;font-size:14.5px;font-weight:600;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
   .urgency b{font-weight:700}
   .urgency-txt{flex:1 1 300px}
