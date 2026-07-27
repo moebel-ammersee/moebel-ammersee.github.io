@@ -171,11 +171,10 @@
     <span class="urgency-txt">⚡ <b>First come, first serve.</b> Jedes Stück gibt es nur einmal. Wer zuerst verbindlich zusagt, bekommt es.</span>
     <div class="cd" id="countdown" role="timer" aria-live="off" aria-label="Verbleibende Zeit bis 11. August"></div>
   </div>
-  <p class="share-note">💛 <b>Bitte leite das hier weiter an Freunde und Bekannte.</b> Je mehr Stücke ein gutes neues Zuhause finden, desto weniger landet am Ende auf dem Sperrmüll.</p>
   <p class="nudge" id="nudge"></p>
   <div class="cta-row">
     <a class="btn btn-primary" id="heroWa" href="#" target="_blank" rel="noopener">Per WhatsApp melden</a>
-    <button class="btn btn-share" id="shareBtn" type="button">Seite teilen</button>
+    <button class="btn btn-share" id="shareBtn" type="button">An Freunde und Bekannte weiterleiten</button>
     <a class="btn btn-ghost" href="#items">Alle Stücke ansehen</a>
   </div>
 </div></header>
@@ -206,7 +205,7 @@
 
 <div class="sticky">
   <a class="btn btn-primary" id="stickyWa" href="#" target="_blank" rel="noopener">Jetzt schreiben</a>
-  <a class="btn btn-ghost" href="#items">Alle 26 Stücke</a>
+  <button class="btn btn-share" id="stickyShare" type="button">Weiterleiten</button>
 </div>
 
 <script>
@@ -373,7 +372,6 @@ function buildFilters(){
 }
 const heroWa=document.getElementById('heroWa'), footWa=document.getElementById('footWa');
 const stickyWa=document.getElementById('stickyWa');
-document.querySelector('.sticky a[href="#items"]').textContent="Alle "+ITEMS.length+" Stücke";
 if(HAS_WA){
   heroWa.href=waLink("mehrere Stücke");
   footWa.href=waLink("mehrere Stücke");
@@ -411,23 +409,27 @@ if(tickCountdown()){
 /* Teilen-Button: auf dem Handy oeffnet das den nativen Teilen-Dialog
    (WhatsApp, Signal, Mail ...). Am Desktop gibt es den nicht, dort wird der
    Link in die Zwischenablage kopiert und der Button bestaetigt das kurz. */
-const shareBtn=document.getElementById('shareBtn');
 const SHARE={title:document.title,
   text:"Schau mal – hier werden schöne Möbel abgegeben (B&B Italia, HAY, BoConcept …), 60–80 % unter Neupreis.",
   url:location.href.split('?')[0]};
-shareBtn.addEventListener('click',async()=>{
-  if(navigator.share){
-    try{ await navigator.share(SHARE); return; }catch(e){ if(e.name==='AbortError') return; }
-  }
-  try{ await navigator.clipboard.writeText(SHARE.url); }
-  catch(e){
-    // aelterer Fallback, falls die Zwischenablage gesperrt ist
-    const t=document.createElement('textarea'); t.value=SHARE.url; document.body.appendChild(t);
-    t.select(); try{document.execCommand('copy');}catch(_){ } t.remove();
-  }
-  const old=shareBtn.textContent;
-  shareBtn.textContent="Link kopiert ✓"; shareBtn.classList.add('done');
-  setTimeout(()=>{shareBtn.textContent=old;shareBtn.classList.remove('done');},2200);
+// Zwei Teilen-Knöpfe: einer oben im Kopfbereich, einer unten in der festen
+// Leiste am Handy. Beide hängen an derselben Logik.
+[document.getElementById('shareBtn'), document.getElementById('stickyShare')].forEach(btn=>{
+  if(!btn) return;
+  btn.addEventListener('click',async()=>{
+    if(navigator.share){
+      try{ await navigator.share(SHARE); return; }catch(e){ if(e.name==='AbortError') return; }
+    }
+    try{ await navigator.clipboard.writeText(SHARE.url); }
+    catch(e){
+      // aelterer Fallback, falls die Zwischenablage gesperrt ist
+      const t=document.createElement('textarea'); t.value=SHARE.url; document.body.appendChild(t);
+      t.select(); try{document.execCommand('copy');}catch(_){ } t.remove();
+    }
+    const old=btn.textContent;
+    btn.textContent="Link kopiert ✓"; btn.classList.add('done');
+    setTimeout(()=>{btn.textContent=old;btn.classList.remove('done');},2200);
+  });
 });
 
 document.getElementById('ledeCount').textContent=ITEMS.length+" Stücke";
