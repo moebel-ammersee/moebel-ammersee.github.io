@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ausgewählte Möbel · Abzugeben in Herrsching</title>
+<style>
+  :root{
+    --bg:#f4f1ec;--panel:#faf8f4;--imgbg:#ece6dd;--ink:#1c1a17;--muted:#6f6a62;
+    --line:#e0dad0;--accent:#8a6a4b;--tag:#efeae2;
+    --shadow:0 1px 2px rgba(28,26,23,.04),0 12px 32px rgba(28,26,23,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  header{padding:60px 0 38px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:16px}
+  h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(30px,5vw,50px);line-height:1.08;letter-spacing:-.01em;
+    max-width:24ch;text-wrap:balance}
+  .lede{margin-top:20px;max-width:60ch;color:var(--muted);font-size:17px;text-wrap:pretty}
+  .meta-row{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
+  .chip{background:var(--tag);border:1px solid var(--line);padding:7px 14px;border-radius:999px;font-size:13px}
+  .cta-row{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:.15s}
+  .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{filter:brightness(1.06)}
+  .btn-ghost{background:transparent;border-color:var(--ink);color:var(--ink)}.btn-ghost:hover{background:var(--ink);color:#fff}
+  .urgency{margin-top:22px;padding:13px 18px;border-radius:12px;background:#7a1f1f;color:#fff;font-size:14.5px;font-weight:600;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+  .urgency b{font-weight:700}
+  .urgency-txt{flex:1 1 300px}
+  /* countdown */
+  .cd{display:flex;gap:7px;margin-left:auto}
+  .cd-u{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.16);border-radius:9px;
+    padding:6px 9px;min-width:54px;text-align:center;line-height:1.2}
+  .cd-n{display:block;font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+  .cd-l{display:block;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;opacity:.8;font-weight:600}
+  .cd.ended{margin-left:0}
+  .cd-over{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:7px 13px;font-size:13px}
+  @media(max-width:520px){.cd{margin-left:0;width:100%}.cd-u{flex:1;min-width:0}}
+  .orig{display:block;font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:3px}
+  /* Rabatt-Anker: der Sprung vom Neupreis auf den VB ist das staerkste
+     Verkaufsargument der Seite - der bekommt eigene Farbe. */
+  .save{display:inline-block;margin-left:8px;background:#0f5c2e;color:#fff;font-size:12px;
+    font-weight:700;padding:2px 8px;border-radius:999px;vertical-align:2px;letter-spacing:.01em}
+  .priceline{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 4px}
+  .priceline .orig{flex-basis:100%}
+  /* Sticky Leiste am Handy: die Haupt-Aktion darf nie wegscrollen. */
+  .sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;gap:10px;padding:10px 14px
+    calc(10px + env(safe-area-inset-bottom));background:rgba(250,248,244,.94);
+    backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+  .sticky .btn{flex:1;justify-content:center;padding:12px 14px;font-size:14.5px}
+  @media(max-width:720px){.sticky{display:flex}body{padding-bottom:74px}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .owner-note{max-width:1120px;margin:18px auto 0;padding:14px 18px;background:#fff7e8;border:1px solid #eeddb8;border-radius:12px;font-size:13px;color:#6b5828}
+  .owner-note code{background:#f3e6c8;padding:1px 6px;border-radius:5px;font-size:12px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:26px 0 6px}
+  .filter{background:transparent;border:1px solid var(--line);padding:8px 16px;border-radius:999px;font-size:14px;color:var(--muted);cursor:pointer;font-weight:500;transition:.15s}
+  .filter.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .toolbar-count{margin-left:auto;font-size:13px;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;padding:20px 0 60px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 4px 10px rgba(28,26,23,.06),0 22px 48px rgba(28,26,23,.10)}
+  .card.feature{grid-column:span 2}
+  @media(max-width:720px){.card.feature{grid-column:span 1}}
+  /* gallery — full item visible, no crop */
+  .ph{position:relative;aspect-ratio:4/3;background:var(--imgbg);overflow:hidden}
+  .card.feature .ph{aspect-ratio:3/2}
+  .slides{position:absolute;inset:0}
+  .slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .35s ease}
+  .slides img.on{opacity:1}
+  .ph-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#a89f90;
+    background:repeating-linear-gradient(45deg,#e9e3d9,#e9e3d9 12px,#e4ddd1 12px,#e4ddd1 24px)}
+  .ph-empty svg{width:34px;height:34px;opacity:.7}.ph-empty span{font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+  .nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(255,255,255,.82);color:#1c1a17;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);transition:.15s;z-index:2}
+  .nav:hover{background:#fff}.nav.prev{left:10px}.nav.next{right:10px}
+  .count-badge{position:absolute;top:12px;right:12px;background:rgba(28,26,23,.72);color:#fff;font-size:11px;padding:4px 9px;border-radius:999px;z-index:2;letter-spacing:.03em}
+  .dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:2}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.15);cursor:pointer;padding:0}
+  .dot.on{background:#fff;border-color:#8a6a4b}
+  .ref-tag{position:absolute;bottom:10px;left:12px;background:rgba(255,255,255,.8);color:#6b5828;font-size:10.5px;padding:3px 8px;border-radius:6px;z-index:2}
+  .badge{position:absolute;top:12px;left:12px;background:rgba(28,26,23,.86);color:#fff;padding:5px 12px;border-radius:999px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;z-index:3}
+  .badge.sold{background:#8a2b2b}.badge.reserved{background:#8a6a4b}
+  .body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+  .brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:6px}
+  .name{font-family:Georgia,serif;font-size:21px;font-weight:500;line-height:1.2}
+  .desc{margin-top:10px;color:var(--muted);font-size:14.5px;flex:1}
+  .specs{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px}
+  .spec{font-size:12px;color:var(--muted);background:var(--tag);border:1px solid var(--line);padding:4px 10px;border-radius:6px}
+  .priceline{margin-top:18px}
+  .price{font-size:16px;color:var(--accent);font-weight:600}
+  .card-actions{margin-top:16px;display:flex;gap:8px}
+  .card-actions .btn{padding:11px 16px;font-size:13.5px;flex:1;justify-content:center}
+  .btn-wa{background:#1f7a4d;color:#fff}.btn-wa:hover{filter:brightness(1.08)}
+  .btn-mail{background:transparent;border-color:var(--line);color:var(--ink)}.btn-mail:hover{border-color:var(--ink)}
+  .how{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .how .wrap{padding:52px 24px}
+  .how h2{font-family:Georgia,serif;font-weight:500;font-size:28px;margin-bottom:8px}
+  .how p.sub{color:var(--muted);max-width:60ch;margin-bottom:30px}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:22px}
+  .step .n{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;margin-bottom:12px}
+  .step h3{font-size:16px;margin-bottom:6px}.step p{font-size:14px;color:var(--muted)}
+  footer{padding:50px 0 70px;text-align:center}
+  footer .big{font-family:Georgia,serif;font-size:26px;font-weight:500;margin-bottom:10px}
+  footer p{color:var(--muted);max-width:52ch;margin:0 auto 22px}
+  .foot-legal{margin-top:38px;font-size:12px;color:#a49c8f}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="eyebrow">Privatverkauf · Herrsching am Ammersee</div>
+  <!-- Geschuetztes Leerzeichen vor dem Gedankenstrich: der Strich darf nie eine
+       Zeile anfangen. Zusammen mit text-wrap:balance ergibt das 3 saubere Zeilen
+       am Desktop und 4 ohne Schusterjunge am Handy. -->
+  <h1>Ausgewählte Möbel &amp; Stücke aus unserem Zuhause&nbsp;— an gute Hände abzugeben.</h1>
+  <p class="lede"><b id="ledeCount">26 Stücke</b> aus unserem Zuhause: B&amp;B&nbsp;Italia, HAY, BoConcept, Arper, Softline, Ferm&nbsp;Living. Wir ziehen um — bis zum 19.&nbsp;August muss alles raus, deshalb die Preise. Abholung in 82211&nbsp;Herrsching, Anschauen jederzeit möglich.</p>
+  <div class="meta-row">
+    <span class="chip">🏷️ 60–75 % unter Neupreis</span>
+    <span class="chip">📍 Abholung in 82211 Herrsching</span>
+    <span class="chip">🤝 Paketpreis bei mehreren Teilen</span>
+  </div>
+  <div class="urgency">
+    <span class="urgency-txt">⚡ <b>First come, first serve.</b> Jedes Stück gibt es nur einmal. Wer zuerst verbindlich zusagt, bekommt es.</span>
+    <div class="cd" id="countdown" role="timer" aria-live="off" aria-label="Verbleibende Zeit bis 19. August"></div>
+  </div>
+  <div class="cta-row">
+    <a class="btn btn-primary" id="heroWa" href="#" target="_blank" rel="noopener">Per WhatsApp melden</a>
+    <a class="btn btn-ghost" href="#items">Alle Stücke ansehen</a>
+  </div>
+</div></header>
+
+<div class="wrap" id="items"><div class="toolbar" id="filters"></div></div>
+<div class="wrap"><div class="grid" id="grid"></div></div>
+
+<section class="how"><div class="wrap">
+  <h2>So läuft's</h2>
+  <p class="sub">Unkompliziert, fair, schnell. Wer zuerst verbindlich zusagt, bekommt den Zuschlag.</p>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h3>Melden</h3><p>Kurze Nachricht per WhatsApp oder E‑Mail: welches Stück, wann du kommen könntest. Wir antworten meist am selben Tag.</p></div>
+    <div class="step"><div class="n">2</div><h3>Reservieren</h3><p>Wer zuerst verbindlich zusagt, bekommt es. Wir halten es dann bis zum vereinbarten Termin – ohne Anzahlung.</p></div>
+    <div class="step"><div class="n">3</div><h3>Anschauen &amp; abholen</h3><p>Termin in 82211 Herrsching. Vorher anschauen ist ausdrücklich willkommen. Zahlung bar oder per Überweisung bei Abholung.</p></div>
+    <div class="step"><div class="n">4</div><h3>Einladen</h3><p>Beim Tragen und Verladen helfen wir mit. Große Stücke sind zerlegbar bzw. passen in einen normalen Transporter.</p></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="big">Interesse an mehreren Stücken?</div>
+  <p>Sag uns, was dir gefällt — für Kombinationen machen wir einen fairen Paketpreis. Weitersagen erwünscht.</p>
+  <div class="cta-row" style="justify-content:center">
+    <a class="btn btn-primary" id="footWa" href="#" target="_blank" rel="noopener">WhatsApp schreiben</a>
+    <a class="btn btn-ghost" id="footMail" href="#">E‑Mail schreiben</a>
+  </div>
+  <div class="foot-legal">Privatverkauf unter Ausschluss jeglicher Gewährleistung. Keine Rücknahme, kein Umtausch.</div>
+</div></footer>
+
+<div class="sticky">
+  <a class="btn btn-primary" id="stickyWa" href="#" target="_blank" rel="noopener">Jetzt schreiben</a>
+  <a class="btn btn-ghost" href="#items">Alle 26 Stücke</a>
+</div>
+
+<script>
+/* ====== DEINE KONTAKTDATEN ======
+   phone = WhatsApp-Nummer, international, OHNE + und OHNE Leerzeichen (z.B. 4917012345678).
+   Solange phone leer ist, werden die WhatsApp-Buttons automatisch ausgeblendet
+   und nur E-Mail angeboten — die Seite bleibt also auch ohne Nummer teilbar. */
+const CONTACT = { name:"Sandro", phone:"4917670494633", email:"sandro@halloklarheit.de", deadline:"19. August" };
+/* Ende der Aktion. +02:00 = deutsche Sommerzeit, damit der Countdown fuer
+   Besucher in jeder Zeitzone denselben Endzeitpunkt meint. */
+const DEADLINE = new Date("2026-08-19T23:59:59+02:00");
+/* ================================= */
+const HAS_WA = /^\d{8,15}$/.test(CONTACT.phone);
+const ITEMS = [{"name": "„Charles“ Sofa · Antonio Citterio", "brand": "B&B Italia", "cat": "Sofas", "desc": "Der Designklassiker der Sammlung: B&B Italia Maxalto „Charles“ von Antonio Citterio, Anthrazit mit Chaiselongue. Bezug, Polster und die Alufüße sind top in Schuss. Ehrlich gesagt: an der Unterkonstruktion gibt es eine Beschädigung – man merkt sie beim Sitzen nicht, aber wir sagen es lieber vorher als nachher. Genau deshalb der Preis. Originaletikett ist dran (letztes Foto).", "specs": ["Anthrazit, Stoff", "mit Chaiselongue", "Originaletikett vorhanden", "Unterkonstruktion beschädigt"], "orig": "Neupreis heute über 10.000 €", "vb": "VB 2.400 €", "feature": true, "status": "", "imgs": ["img/40210b0d3474.jpg", "img/3806141eaba0.jpg", "img/0adfab7ae6c6.jpg", "img/d2dde1cdb764.jpg", "img/888ea89412e6.jpg"], "save": "−76 %"}, {"name": "Noomi · Drehsessel magenta (2 Stück)", "brand": "Softline", "cat": "Sessel", "desc": "Softline „Noomi“ Drehsessel in Magenta, 2 Stück. Weiche Schalenform auf verchromtem Sternfuß, dreht sich 360°. Werden zusammen oder einzeln abgegeben.", "specs": ["2 Stück", "Magenta", "Drehfuß verchromt", "guter Zustand"], "orig": "Neupreis 1.200 € pro Stück", "vb": "VB 360 €/Stück", "feature": true, "status": "", "imgs": ["img/5fca40081fac.jpg", "img/d0df4d79f9d3.jpg", "img/d6035b5ee5fd.jpg", "img/8233a5534744.jpg", "img/6e4217e7c1f4.jpg"], "save": "−70 %"}, {"name": "Fermo · Sideboard weiß, 2 Türen", "brand": "BoConcept", "cat": "Sideboards", "desc": "BoConcept „Fermo“ Sideboard in Weiß mit zwei Türen, auf schlanken Metallfüßen. Das größere der beiden Fermo-Sideboards.", "specs": ["weiß", "2 Türen", "Metallfüße", "guter Zustand"], "orig": "", "vb": "VB 280 €", "feature": false, "status": "", "imgs": ["img/abe12990cdf3.jpg", "img/7a365fd9b2a9.jpg", "img/a59396aa0b2f.jpg", "img/c3a6bfa90c1c.jpg"]}, {"name": "Copenhague · Esstisch rund, weiß", "brand": "HAY", "cat": "Tische", "desc": "HAY Copenhague – der Design-Klassiker (Ronan & Erwan Bouroullec). Runde weiße Platte mit charakteristischer Multiplex-Kante auf schlanken Metallbeinen. (Genaues Modell/Ø wird noch bestätigt.)", "specs": ["weiß / Multiplex-Kante", "sehr guter Zustand"], "orig": "Neupreis ca. 700 €", "vb": "VB 230 €", "feature": false, "status": "", "imgs": ["img/be7f5ccf0652.jpg", "img/2c1bfdd68a0b.jpg", "img/bd7e90583f41.jpg", "img/39b139811bba.jpg"], "save": "−67 %"}, {"name": "About A Chair · Armlehnschale schwarz", "brand": "HAY", "cat": "Stühle", "desc": "HAY About A Chair (AAC) in Schwarz mit Metallgestell. Design-Liebling, mehrere verfügbar.", "specs": ["schwarz, 4-Bein", "guter Zustand"], "orig": "Neupreis ca. 250 €/Stück", "vb": "VB 85 €/Stück", "feature": false, "status": "", "imgs": ["img/fb37dee6214a.jpg", "img/691153efa925.jpg", "img/79d4609fa132.jpg"], "save": "−66 %"}, {"name": "Aava · Schalenstuhl weiß", "brand": "Arper", "cat": "Stühle", "desc": "Arper „Aava“ (Antti Kotilainen) – schlanker Schalenstuhl in Weiß mit schwarzem Gestell. Mehrere verfügbar.", "specs": ["weiß / schwarzes Gestell", "guter Zustand"], "orig": "Neupreis ca. 300 €/Stück", "vb": "VB 95 €/Stück", "feature": false, "status": "", "imgs": ["img/0fd5f6244786.jpg", "img/86217907d128.jpg", "img/1e3875e31ccb.jpg"], "save": "−68 %"}, {"name": "Steh­schreibtisch A · ca. 100 × 70 cm", "brand": "Maßanfertigung", "cat": "Schreibtische", "desc": "Maßgefertigter Steh­schreibtisch: weißes Stahlgestell, Platte mit Multiplex-Kante. Solide, minimalistisch.", "specs": ["ca. 100 × 70 cm", "Höhe ca. 107 cm", "Maßanfertigung"], "orig": "", "vb": "VB 110 €", "feature": false, "status": "", "imgs": ["img/965bc9cc6cb9.jpg"]}, {"name": "Steh­schreibtisch B · ca. 80 × 80 cm", "brand": "Maßanfertigung", "cat": "Schreibtische", "desc": "Zweiter maßgefertigter Steh­schreibtisch, quadratisch: weißes Stahlgestell, Platte mit Multiplex-Kante.", "specs": ["ca. 80 × 80 cm", "Höhe ca. 107 cm", "Maßanfertigung"], "orig": "", "vb": "VB 110 €", "feature": false, "status": "", "imgs": ["img/698c4cd812a9.jpg"]}, {"name": "Beistelltisch rund · Eiche, drehbar", "brand": "", "cat": "Tische", "desc": "Runder Beistelltisch mit Eichen-Tablettplatte und schwarzen Beinen, drehbar. Warm und wertig.", "specs": ["Eiche / Metall, drehbar", "guter Zustand"], "orig": "", "vb": "VB 30 €", "feature": false, "status": "", "imgs": ["img/70b7796b6ec0.jpg", "img/22b920c779c1.jpg", "img/28afc1af7316.jpg", "img/cbb182c2d3c3.jpg"]}, {"name": "Beistelltisch · Holz & Metall (C-Form) · 2 Stück", "brand": "", "cat": "Tische", "desc": "Wood-&-Metall-Beistelltisch in C-Form (Amazon) – schiebt sich unter Sofa oder Sessel. 2 Stück verfügbar. (Zweites Foto folgt.)", "specs": ["2 Stück", "Massivholz / Metall", "guter Zustand"], "orig": "Neupreis ca. 50 €/Stück", "vb": "VB 18 €/Stück", "feature": false, "status": "", "imgs": ["img/0fd500a73768.jpg"], "save": "−64 %"}, {"name": "Konsole / Regal · schwarz (Maßanfertigung)", "brand": "Maßanfertigung", "cat": "Sideboards", "desc": "Niedrige, offene Konsole aus schwarzem Multiplex – Maßanfertigung. Als Regal, Raumteiler oder Ablage.", "specs": ["Multiplex, schwarz", "guter Zustand"], "orig": "", "vb": "VB 90 €", "feature": false, "status": "", "imgs": ["img/da44544d855f.jpg"]}, {"name": "Vase · Keramik creme", "brand": "", "cat": "Deko", "desc": "Große cremefarbene Keramikvase – ruhige, organische Form.", "specs": ["Keramik, creme", "sehr guter Zustand"], "orig": "", "vb": "VB 20 €", "feature": false, "status": "", "imgs": ["img/045c373a23e6.jpg"]}, {"name": "Meditations-Set (3 Stück)", "brand": "", "cat": "Sonstiges", "desc": "Drei komplette Meditations-Sets: Bodenmatte + Kissen mit Lotus-Stickerei, in Rot, Schwarz und Creme.", "specs": ["3 Sets", "Matte + Kissen", "gepflegt"], "orig": "Neupreis ca. 100 €/Set", "vb": "VB 30 €/Set", "feature": false, "status": "", "imgs": ["img/5b0d6defe9f9.jpg", "img/1379548b3e56.jpg"], "save": "−70 %"}, {"name": "Espressomaschine · Barista Express", "brand": "Sage", "cat": "Sonstiges", "desc": "Sage / Breville Barista Express Siebträger mit integriertem Mahlwerk. Voll funktionsfähig, gepflegt.", "specs": ["mit Mahlwerk", "Edelstahl", "funktionsfähig"], "orig": "Neupreis ca. 650 €", "vb": "VB 220 €", "feature": false, "status": "", "imgs": ["img/e9a6ce65c849.jpg"], "save": "−66 %"}, {"name": "Mischpult · MG10XU", "brand": "Yamaha", "cat": "Sonstiges", "desc": "Yamaha MG10XU Mischpult mit USB und Effekten. Ideal fürs Homestudio / Podcast. Voll funktionsfähig.", "specs": ["10 Kanäle, USB", "mit Effekten", "funktionsfähig"], "orig": "Neupreis ca. 200 €", "vb": "VB 65 €", "feature": false, "status": "", "imgs": ["img/53185e6b36f4.jpg", "img/d03b033ee298.jpg"], "save": "−68 %"}, {"name": "Original · höhenverstellbarer Schreibtisch, weiß (120×70)", "brand": "Eliot", "cat": "Schreibtische", "desc": "Eliot Original, elektrisch höhenverstellbar (65–130 cm), Designplatte Weiß 120×70 cm. (Herstellerfoto – eigenes folgt.)", "specs": ["120 × 70 cm", "elektrisch höhenverstellbar"], "orig": "Neupreis ca. 675 €", "vb": "VB 200 €", "feature": false, "status": "", "imgs": ["img/6db373bf2602.jpg", "img/feb0e34ff7e8.jpg"], "save": "−70 %", "ref": true}, {"name": "Stehlampe · Buckle Head (3 Stück)", "brand": "Zuiver", "cat": "Lampen", "desc": "Zuiver Buckle Head Stehlampen mit neigbarem Metallschirm. 2× Schwarz, 1× Weiß. (Herstellerfoto – eigenes folgt.)", "specs": ["3 Stück (2 schwarz, 1 weiß)", "neigbarer Schirm"], "orig": "Neupreis 149 €/Stück", "vb": "VB 45 €/Stück", "feature": false, "status": "", "imgs": ["img/a2741750b555.jpg"], "save": "−70 %", "ref": true}, {"name": "Plant Box (2 Stück)", "brand": "Ferm Living", "cat": "Sideboards", "desc": "Ferm Living Plant Box aus pulverbeschichtetem Stahl – Beistelltisch, Raumteiler & Pflanzkübel in einem. 1× Schwarz, 1× Cashmere. (Herstellerfoto – eigenes folgt.)", "specs": ["2 Stück (schwarz, cashmere)", "Stahl, pulverbeschichtet"], "orig": "Neupreis ca. 249 €", "vb": "VB 75 €", "feature": false, "status": "", "imgs": ["img/d84553cf624a.jpg"], "save": "−70 %", "ref": true}, {"name": "Minimax ASB · Vintage-Synthesizer", "brand": "Creamware", "cat": "Sonstiges", "desc": "Creamware Minimax ASB Desktop-Synthesizer (Minimoog-Emulation): 3 Oszillatoren, 24 dB Moog-Filter, bis 12-stimmig, MIDI.", "specs": ["Minimoog-Emulation", "MIDI, bis 12-stimmig", "funktionsfähig"], "orig": "Marktpreis ca. 659 €", "vb": "VB 480 €", "feature": false, "status": "", "imgs": ["img/dab652a606c9.jpg", "img/9cecef20cf9d.jpg", "img/3d092fd14094.jpg"], "save": "−27 %", "ref": true}, {"name": "KingKORG · Synthesizer (61 Tasten)", "brand": "Korg", "cat": "Sonstiges", "desc": "Korg KingKORG Virtual-Analog-Synthesizer, 61 Tasten, inkl. Zubehör. Voll funktionsfähig, normale Gebrauchsspuren. (Referenzfoto – eigenes folgt.)", "specs": ["61 Tasten", "Virtual Analog", "funktionsfähig"], "orig": "Neupreis ca. 900 €", "vb": "VB 420 €", "feature": false, "status": "", "imgs": ["img/a2622ccc5c38.jpg"], "save": "−53 %", "ref": true}, {"name": "Fermo · Sideboard weiß mit Klappe & Sitzauflage", "brand": "BoConcept", "cat": "Sideboards", "desc": "BoConcept „Fermo“ Sideboard in Weiß, niedrig, mit aufklappbarem Deckel und gepolsterter Sitzauflage – funktioniert als Sideboard und als Sitzbank. Das zweite der beiden Fermo-Sideboards.", "specs": ["weiß", "Stauraum unter der Klappe", "Sitzauflage grau", "Metallfüße"], "orig": "", "vb": "VB 280 €", "feature": false, "status": "", "imgs": ["img/62fcb647f02a.jpg", "img/56934fe94332.jpg"]}, {"name": "Teppich · Hochflor grau-beige, groß", "brand": "", "cat": "Sonstiges", "desc": "Großer Hochflorteppich in Grau-Beige, weicher dichter Flor. Maße folgen.", "specs": ["Hochflor", "grau-beige", "groß"], "orig": "", "vb": "VB 120 €", "feature": false, "status": "", "imgs": ["img/9cf645f0eff0.jpg", "img/ff4f7c62fd2e.jpg", "img/5e0f7200f980.jpg"]}, {"name": "Mooswand · rund, bepflanzt", "brand": "", "cat": "Deko", "desc": "Rundes Moosbild mit konservierter Bepflanzung, in Grau gefasst. Braucht kein Wasser und kein Licht.", "specs": ["rund", "konserviertes Moos", "wandhängend"], "orig": "", "vb": "VB 70 €", "feature": false, "status": "", "imgs": ["img/606a97db8688.jpg"]}, {"name": "Fahrrad · Singlespeed schwarz", "brand": "", "cat": "Sonstiges", "desc": "Schwarzes Singlespeed-Rad mit braunem Ledersattel und Holzfelgen-Optik.", "specs": ["Singlespeed", "schwarz", "Ledersattel"], "orig": "", "vb": "VB 140 €", "feature": false, "status": "", "imgs": ["img/17dd0326b545.jpg"]}, {"name": "Pouf · Samt dunkelgrün, rund", "brand": "", "cat": "Sessel", "desc": "Runder Samt-Pouf in Dunkelgrün mit Knopfheftung. Foto zeigt ihn im Raum – Einzelfoto folgt.", "specs": ["Samt dunkelgrün", "rund", "geknöpft"], "orig": "", "vb": "VB 50 €", "feature": false, "status": "", "imgs": ["img/099177073bc7.jpg"]}, {"name": "Tagesbett · hell, mit Metallgestell", "brand": "", "cat": "Sofas", "desc": "Schlichtes Tagesbett / Daybed mit heller Polsterung auf schwarzem Metallgestell. Foto zeigt es im Raum – Einzelfoto folgt.", "specs": ["helle Polsterung", "Metallgestell schwarz"], "orig": "", "vb": "VB 180 €", "feature": false, "status": "", "imgs": ["img/90640eece53e.jpg"]}];
+
+function waLink(n){return `https://wa.me/${CONTACT.phone}?text=`+encodeURIComponent(`Hallo ${CONTACT.name}, ich interessiere mich für: ${n}. Ist das noch verfügbar?`);}
+function mailLink(n){return `mailto:${CONTACT.email}?subject=`+encodeURIComponent(`Interesse: ${n}`)+`&body=`+encodeURIComponent(`Hallo ${CONTACT.name},\n\nich interessiere mich für "${n}" von eurer Verkaufsseite. Ist es noch verfügbar?\n\nViele Grüße`);}
+const PH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>';
+function badge(s){return s==="sold"?'<span class="badge sold">Verkauft</span>':s==="reserved"?'<span class="badge reserved">Reserviert</span>':'';}
+
+function gallery(it){
+  const imgs=it.imgs||[];
+  const remote = imgs.length && imgs[0].startsWith("http");
+  if(!imgs.length){return `<div class="ph">${badge(it.status)}<div class="ph-empty">${PH}<span>Foto folgt</span></div></div>`;}
+  const slides=imgs.map((s,i)=>`<img src="${s}" alt="${it.name}" loading="lazy" onerror="galFail(this)" class="${i===0?'on':''}">`).join('');
+  const multi=imgs.length>1;
+  const nav=multi?`<button class="nav prev" aria-label="zurück">‹</button><button class="nav next" aria-label="weiter">›</button>
+     <div class="count-badge">📷 ${imgs.length}</div>
+     <div class="dots">${imgs.map((_,i)=>`<button class="dot ${i===0?'on':''}" data-i="${i}"></button>`).join('')}</div>`:'';
+  // "Referenzfoto" statt "Herstellerfoto": trifft auch auf Inserats-/Katalogfotos zu,
+  // die keine Herstellerbilder sind. Kennzeichnet: kein eigenes Foto des Stuecks.
+  const ref=(it.ref||remote)?`<div class="ref-tag">Referenzfoto</div>`:'';
+  return `<div class="ph">${badge(it.status)}<div class="slides">${slides}</div>${nav}${ref}</div>`;
+}
+
+function galFail(img){
+  const ph=img.closest('.ph'), slides=img.closest('.slides');
+  const i=[...slides.querySelectorAll('img')].indexOf(img);
+  img.remove();
+  const dots=ph.querySelectorAll('.dot'); if(dots[i])dots[i].remove();
+  const left=slides.querySelectorAll('img');
+  if(!left.length){ ph.innerHTML='<div class="ph-empty">'+PH+'<span>Foto folgt</span></div>'; return; }
+  if(!slides.querySelector('img.on')) left[0].classList.add('on');
+  const cb=ph.querySelector('.count-badge'); if(cb) cb.textContent='📷 '+left.length;
+  if(left.length<2) ph.querySelectorAll('.nav,.dots,.count-badge').forEach(x=>x.remove());
+}
+function card(it){
+  const sold=it.status==="sold";
+  return `<article class="card ${it.feature?'feature':''}">
+    ${gallery(it)}
+    <div class="body">
+      ${it.brand?`<div class="brand">${it.brand}</div>`:''}
+      <div class="name">${it.name}</div>
+      <div class="desc">${it.desc}</div>
+      <div class="specs">${(it.specs||[]).map(s=>`<span class="spec">${s}</span>`).join('')}</div>
+      <div class="priceline">${it.orig?`<span class="orig">${it.orig}</span>`:''}<span class="price">${it.vb||'VB'}</span>${it.save?`<span class="save">${it.save}</span>`:''}</div>
+      <div class="card-actions">
+        ${sold?`<span class="btn btn-mail" style="opacity:.55;flex:1;justify-content:center">Verkauft</span>`
+        :`${HAS_WA?`<a class="btn btn-wa" href="${waLink(it.name)}" target="_blank" rel="noopener">Ist das noch da?</a>`:''}
+          <a class="btn btn-mail" href="${mailLink(it.name)}" style="${HAS_WA?'':'flex:1;justify-content:center'}">E‑Mail</a>`}
+      </div>
+    </div></article>`;
+}
+
+function render(list){
+  const grid=document.getElementById('grid');
+  grid.innerHTML=list.map(card).join('');
+  document.getElementById('count').textContent=`${list.filter(i=>i.status!=='sold').length} verfügbar`;
+  guardRemote();
+}
+function guardRemote(){
+  document.querySelectorAll('.slides img').forEach(img=>{
+    // NUR fremde Hosts ueberwachen (hotlinked Bilder, die 403 liefern koennen).
+    // Eigene Bilder liegen relativ neben der Seite und werden lazy geladen - die
+    // sind 8s nach dem Laden voellig zu Recht noch nicht da, solange man nicht
+    // hingescrollt hat. Wuerde man die mitzaehlen, raeumt der Waechter die
+    // komplette Galerie ab und jede Karte zeigt "Foto folgt".
+    let cross = false;
+    try { cross = new URL(img.src, location.href).origin !== location.origin; } catch(e){}
+    if(!cross) return;
+    setTimeout(()=>{ if(img.isConnected && !(img.complete && img.naturalWidth>0)) galFail(img); },8000);
+  });
+}
+
+// gallery interaction (event delegation)
+function move(ph,dir){
+  const imgs=[...ph.querySelectorAll('.slides img')], dots=[...ph.querySelectorAll('.dot')];
+  if(imgs.length<2)return;
+  let i=imgs.findIndex(x=>x.classList.contains('on')); imgs[i].classList.remove('on'); dots[i]&&dots[i].classList.remove('on');
+  i=(i+dir+imgs.length)%imgs.length; imgs[i].classList.add('on'); dots[i]&&dots[i].classList.add('on');
+}
+function goto(ph,t){
+  const imgs=[...ph.querySelectorAll('.slides img')], dots=[...ph.querySelectorAll('.dot')];
+  imgs.forEach((x,k)=>x.classList.toggle('on',k===t)); dots.forEach((x,k)=>x.classList.toggle('on',k===t));
+}
+document.getElementById('grid').addEventListener('click',e=>{
+  const nav=e.target.closest('.nav'); if(nav){move(nav.closest('.ph'),nav.classList.contains('next')?1:-1);return;}
+  const dot=e.target.closest('.dot'); if(dot){goto(dot.closest('.ph'),+dot.dataset.i);}
+});
+// swipe
+let sx=0;
+document.getElementById('grid').addEventListener('touchstart',e=>{sx=e.changedTouches[0].clientX;},{passive:true});
+document.getElementById('grid').addEventListener('touchend',e=>{
+  const ph=e.target.closest('.ph'); if(!ph)return; const dx=e.changedTouches[0].clientX-sx;
+  if(Math.abs(dx)>40) move(ph, dx<0?1:-1);
+},{passive:true});
+
+/* Preis als Zahl, damit sortiert werden kann ("VB 2.400 €" -> 2400). */
+function priceOf(it){
+  const m=(it.vb||'').replace(/\s/g,' ').match(/(\d[\d.]*)/);
+  return m?parseInt(m[1].replace(/\./g,''),10):Number.MAX_SAFE_INTEGER;
+}
+let CAT="Alle", SORT="";
+function apply(){
+  let list=CAT==="Alle"?ITEMS.slice():ITEMS.filter(i=>i.cat===CAT);
+  if(SORT==="asc")  list.sort((a,b)=>priceOf(a)-priceOf(b));
+  if(SORT==="desc") list.sort((a,b)=>priceOf(b)-priceOf(a));
+  render(list);
+}
+function buildFilters(){
+  const order=["Sofas","Sessel","Stühle","Tische","Schreibtische","Sideboards","Lampen","Deko","Sonstiges"];
+  const present=order.filter(c=>ITEMS.some(i=>i.cat===c));
+  const cats=["Alle",...present];
+  const bar=document.getElementById('filters');
+  bar.innerHTML=cats.map((c,i)=>`<button class="filter ${i===0?'active':''}" data-cat="${c}">${c}</button>`).join('')
+    +`<select class="filter" id="sort" aria-label="Sortierung">
+        <option value="">Sortieren</option>
+        <option value="asc">Günstigste zuerst</option>
+        <option value="desc">Teuerste zuerst</option>
+      </select>`
+    +`<span class="toolbar-count" id="count"></span>`;
+  bar.querySelectorAll('.filter[data-cat]').forEach(b=>b.addEventListener('click',()=>{
+    bar.querySelectorAll('.filter[data-cat]').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    CAT=b.dataset.cat; apply();
+  }));
+  document.getElementById('sort').addEventListener('change',e=>{SORT=e.target.value;apply();});
+}
+const heroWa=document.getElementById('heroWa'), footWa=document.getElementById('footWa');
+const stickyWa=document.getElementById('stickyWa');
+document.querySelector('.sticky a[href="#items"]').textContent="Alle "+ITEMS.length+" Stücke";
+if(HAS_WA){
+  heroWa.href=waLink("mehrere Stücke");
+  footWa.href=waLink("mehrere Stücke");
+  stickyWa.href=waLink("mehrere Stücke");
+}else{
+  stickyWa.href=mailLink("mehrere Stücke"); stickyWa.textContent="Jetzt E‑Mail schreiben"; stickyWa.removeAttribute('target');
+  // Keine WhatsApp-Nummer gesetzt → Hero-/Footer-Button wird zum E-Mail-Button.
+  heroWa.href=mailLink("mehrere Stücke"); heroWa.textContent="Per E‑Mail melden"; heroWa.removeAttribute('target');
+  footWa.remove();
+  document.querySelectorAll('.step p').forEach(p=>{
+    p.textContent=p.textContent.replace("per WhatsApp oder E‑Mail","per E‑Mail");
+  });
+}
+document.getElementById('footMail').href=mailLink("mehrere Stücke");
+/* ---- Countdown bis zum Aktionsende ---- */
+const cdEl=document.getElementById('countdown');
+const CD_UNITS=[["Tage",864e5],["Std",36e5],["Min",6e4],["Sek",1e3]];
+function tickCountdown(){
+  let left=DEADLINE-new Date();
+  if(left<=0){
+    cdEl.classList.add('ended');
+    cdEl.innerHTML='<span class="cd-over">Aktion beendet — frag trotzdem gern nach.</span>';
+    return false;
+  }
+  cdEl.innerHTML=CD_UNITS.map(([label,ms],i)=>{
+    const v=Math.floor(left/ms); left-=v*ms;
+    return `<div class="cd-u"><span class="cd-n">${i?String(v).padStart(2,'0'):v}</span><span class="cd-l">${label}</span></div>`;
+  }).join('');
+  return true;
+}
+if(tickCountdown()){
+  const cdTimer=setInterval(()=>{ if(!tickCountdown()) clearInterval(cdTimer); },1000);
+}
+
+document.getElementById('ledeCount').textContent=ITEMS.length+" Stücke";
+buildFilters(); apply();
+</script>
+</body>
+</html>
