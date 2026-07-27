@@ -52,6 +52,14 @@
   .offer-note{margin-top:18px;max-width:60ch;font-size:14.5px;color:var(--ink);
     background:var(--tag);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
   .share-note{margin-top:14px;max-width:60ch;font-size:14.5px;color:var(--ink)}
+  /* Dezenter Knappheits-Hinweis. Zeigt ECHTE Zahlen (reservierte Stücke, Restzeit),
+     kein erfundener Zähler - siehe HANDOFF. Bewusst leise: hellgrau, klein. */
+  .nudge{margin-top:10px;font-size:13px;color:#8b857c;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+  .nudge b{font-weight:600;color:#6b655c}
+  .nudge .dot{width:6px;height:6px;border-radius:50%;background:#8a6a4b;display:inline-block;margin-right:6px;
+    animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+  @media(prefers-reduced-motion:reduce){.nudge .dot{animation:none;opacity:.7}}
   .cta-row{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px}
   .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:.15s}
   .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{filter:brightness(1.06)}
@@ -164,6 +172,7 @@
     <div class="cd" id="countdown" role="timer" aria-live="off" aria-label="Verbleibende Zeit bis 11. August"></div>
   </div>
   <p class="share-note">💛 <b>Bitte leite das hier weiter an Freunde und Bekannte.</b> Je mehr Stücke ein gutes neues Zuhause finden, desto weniger landet am Ende auf dem Sperrmüll.</p>
+  <p class="nudge" id="nudge"></p>
   <div class="cta-row">
     <a class="btn btn-primary" id="heroWa" href="#" target="_blank" rel="noopener">Per WhatsApp melden</a>
     <button class="btn btn-share" id="shareBtn" type="button">Seite teilen</button>
@@ -422,6 +431,20 @@ shareBtn.addEventListener('click',async()=>{
 });
 
 document.getElementById('ledeCount').textContent=ITEMS.length+" Stücke";
+
+/* Knappheits-Zeile aus ECHTEN Daten: wie viele Stücke schon weg sind und wie
+   viele Tage noch bleiben. Beides stimmt und ist nachprüfbar - deshalb darf es
+   auch auf einer Seite stehen, die sonst mit ehrlichen Angaben Vertrauen
+   aufbaut (offengelegter Sofa-Schaden usw.). */
+(function(){
+  const weg = ITEMS.filter(i=>i.status==="reserved"||i.status==="sold").length;
+  const tage = Math.max(0, Math.ceil((DEADLINE - new Date())/864e5));
+  const parts = [];
+  if(weg) parts.push(`<span><span class="dot"></span><b>${weg} von ${ITEMS.length}</b> schon weg</span>`);
+  parts.push(`<span>noch <b>${tage} Tage</b> bis zur Abholung</span>`);
+  parts.push(`<span>jedes Stück gibt es nur einmal</span>`);
+  document.getElementById('nudge').innerHTML = parts.join('<span aria-hidden="true">·</span>');
+})();
 buildFilters(); apply();
 </script>
 </body>
