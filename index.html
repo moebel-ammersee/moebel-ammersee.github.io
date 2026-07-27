@@ -438,7 +438,9 @@ document.getElementById('ledeCount').textContent=ITEMS.length+" Stücke";
    aufbaut (offengelegter Sofa-Schaden usw.). */
 (function(){
   const weg = ITEMS.filter(i=>i.status==="reserved"||i.status==="sold").length;
-  const tage = Math.max(0, Math.ceil((DEADLINE - new Date())/864e5));
+  // floor, nicht ceil - sonst zeigt diese Zeile 16 Tage, während der Countdown
+  // direkt darüber 15 anzeigt.
+  const tage = Math.max(0, Math.floor((DEADLINE - new Date())/864e5));
   const parts = [];
   if(weg) parts.push(`<span><span class="dot"></span><b>${weg} von ${ITEMS.length}</b> schon weg</span>`);
   parts.push(`<span>noch <b>${tage} Tage</b> bis zur Abholung</span>`);
